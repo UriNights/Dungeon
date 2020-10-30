@@ -1,6 +1,7 @@
 package controller;
 
-import java.util.ResourceBundle;
+import java.nio.file.Paths;
+import java.util.Scanner;
 
 import org.bson.Document;
 
@@ -17,17 +18,15 @@ public class DBController {
 
 	public DBController() {
 
-		ResourceBundle reader = null;
-		try {
-			reader = ResourceBundle.getBundle("src/main/resources/dbconfig/properties");
-			
-			MongoClientURI connectionString = new MongoClientURI(reader.getString("mongoClientURI"));
+		try (Scanner reader = new Scanner(Paths.get("src/main/resources/dbconfig/properties"))) {
+
+			MongoClientURI connectionString = new MongoClientURI(reader.nextLine());
 			this.mongoClient = new MongoClient(connectionString);
-			
+
 		} catch (Exception e) {
-			
+
 		}
-		
+
 		this.dungeonDAO = new DungeonDAO(mongoClient.getDatabase("Dungeon"));
 	}
 
